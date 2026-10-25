@@ -1,0 +1,18 @@
+FIBBE OS for Mac (macOS 15 or newer)
+=====================================
+
+HOW TO OPEN
+1. Double-click the zip to unzip it (macOS does this for you).
+2. Open the "Fibbe OS" folder.
+3. Double-click "Fibbe OS.html". It opens in your browser (Safari works great).
+4. Click the window and use the full screen button to fill your screen.
+
+TIPS
+- Your account, mail and notes are saved in the browser you opened it with.
+  Open it in the same browser every time. Use Settings > Export backup to keep a copy.
+- Some real websites in Fibbe Browser may stay blank, because those sites don't
+  allow being shown inside other pages. Use "Open in new tab" for those.
+- This is the web version of Fibbe in a zip. It is not a native Mac app,
+  so macOS won't show any "unidentified developer" warning.
+
+Enjoy Fibbe!
