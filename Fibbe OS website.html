@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fibbe OS – a computer that lives in your browser</title>
+<meta name="description" content="Fibbe OS is a free desktop with an app store, browser, mail and 76 apps. Download it for macOS 15 and newer.">
+<style>
+:root{--bg:#f6f4fc;--ink:#1c1740;--mut:#5d5880;--line:#ddd8f0;--panel:#fff;--ac:#6a4cf0;--ac2:#e0509a;--on:#fff;--ok:#1a8f6e;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16122e;--ink:#f1eeff;--mut:#a9a3cf;--line:#2f2a58;--panel:#1f1a42;--ac:#9b86ff;--ac2:#ff7ab8;--on:#16122e;--ok:#4fd1a8;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#16122e;--ink:#f1eeff;--mut:#a9a3cf;--line:#2f2a58;--panel:#1f1a42;--ac:#9b86ff;--ac2:#ff7ab8;--on:#16122e;--ok:#4fd1a8;color-scheme:dark}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font:17px/1.6 ui-rounded,"SF Pro Rounded","Avenir Next Rounded","Avenir Next",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+.logo{font-weight:800;font-size:24px;letter-spacing:-.04em;text-decoration:none;background:linear-gradient(120deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+nav{display:flex;gap:22px;font-size:15px}nav a{text-decoration:none;color:var(--mut)}nav a:hover{color:var(--ink)}
+.btn{display:inline-block;background:var(--ac);color:var(--on);border:0;border-radius:14px;padding:13px 24px;font:700 17px/1 inherit;cursor:pointer;text-decoration:none}
+.btn:hover{filter:brightness(1.08)}.btn.sm{padding:9px 16px;font-size:15px;border-radius:11px}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+:focus-visible{outline:3px solid var(--ac2);outline-offset:3px}
+h1{font-size:clamp(38px,6.4vw,68px);line-height:1.02;letter-spacing:-.045em;font-weight:800;max-width:14ch}
+h2{font-size:clamp(26px,3.6vw,38px);letter-spacing:-.035em;line-height:1.1;font-weight:800;margin-bottom:18px}
+.hero{padding:56px 0 30px}.hero p.lead{font-size:20px;color:var(--mut);max-width:46ch;margin:18px 0 26px}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.fine{color:var(--mut);font-size:14px;margin-top:12px}
+/* the live desktop */
+.screen{position:relative;height:380px;margin-top:38px;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,#5b3fe0,#e0509a 68%,#ffb27a);box-shadow:0 30px 60px -28px rgba(60,30,160,.55);color:#1c1740;user-select:none}
+.screen .hint{position:absolute;top:12px;left:16px;color:#fff;font-size:14px;text-shadow:0 1px 6px #0006}
+.dock{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px;padding:8px 10px;background:#ffffff40;backdrop-filter:blur(12px);border-radius:18px}
+.dock button{width:46px;height:46px;border:0;border-radius:12px;background:#fff;font-size:24px;cursor:pointer;transition:transform .15s}
+.dock button:hover{transform:translateY(-4px)}.dock button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ac2)}
+.win{position:absolute;width:250px;background:#fff;border-radius:12px;box-shadow:0 14px 34px #0004;font-size:13px;line-height:1.45;overflow:hidden}
+.win .tt{background:#ece9fb;padding:8px 12px;font-weight:700;cursor:grab;display:flex;justify-content:space-between;touch-action:none}
+.win .tt:active{cursor:grabbing}.win .bd{padding:12px}
+.win .ab{background:#f1eefb;border-radius:8px;padding:5px 9px;margin-bottom:8px}
+.win ul{padding-left:18px}.win button.m{background:#6a4cf0;color:#fff;border:0;border-radius:8px;padding:6px 12px;font:700 13px/1 inherit;cursor:pointer;margin-top:6px}
+.sw{display:flex;gap:8px;align-items:center;cursor:pointer}
+/* quiet sections */
+section{padding:64px 0;border-top:1px solid var(--line)}
+.two{display:grid;grid-template-columns:repeat(2,1fr);gap:26px 52px}
+.two div p{color:var(--mut);margin-top:2px;max-width:46ch}.two b{font-size:18px}
+.shelf p{padding:14px 0;border-bottom:1px solid var(--line);max-width:80ch}.shelf b{display:inline-block;min-width:130px}
+ol.steps{padding-left:22px;max-width:60ch}ol.steps li{padding:6px 0 6px 6px}
+dl.facts{display:grid;grid-template-columns:max-content 1fr;gap:8px 28px;margin:18px 0 26px}dl.facts dt{color:var(--mut)}dl.facts dd{margin:0;font-weight:700}
+details{border-bottom:1px solid var(--line);padding:16px 0;max-width:72ch}summary{cursor:pointer;font-weight:700}details p{color:var(--mut);margin-top:8px}
+.brand{display:flex;flex-direction:column;text-decoration:none;line-height:1.1}
+.logo{display:inline-block}
+.by{display:flex;align-items:center;gap:6px;font-size:12px;line-height:1.2;color:var(--mut);margin-top:2px}
+.by img{height:15px;width:auto;display:block}
+footer .by{font-size:14px;margin:0 0 8px}footer .by img{height:20px}
+.plats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:640px;margin:22px 0 0}
+.plats div{border:1.5px dashed var(--line);border-radius:14px;padding:12px 14px;color:var(--mut)}.plats b{display:block;color:var(--ink)}
+.btn.off{opacity:.6;cursor:default;pointer-events:none}
+footer{padding:36px 0 56px;border-top:1px solid var(--line);color:var(--mut);font-size:14px}
+/* thanks */
+.thanks{padding:70px 0;min-height:70vh}.thanks h1{max-width:18ch}.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;max-width:420px;margin:18px 0}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width 3s linear}
+.note{background:var(--panel);border:1.5px solid var(--ac2);border-radius:14px;padding:14px 18px;max-width:60ch}
+code{background:var(--panel);padding:2px 6px;border-radius:6px;font-size:.9em}
+.pg{padding:56px 0 64px}.pg .wrap>h1{max-width:18ch}.lead{font-size:20px;color:var(--mut);max-width:50ch;margin:16px 0 8px}
+.shots{display:grid;grid-template-columns:repeat(2,1fr);gap:36px 28px;margin-top:28px}.shots figcaption{margin-top:12px}.shots figcaption b{display:block}.shots figcaption span{color:var(--mut);font-size:15px}
+.scr{container-type:inline-size;aspect-ratio:16/10;border-radius:16px;overflow:hidden;position:relative;background:linear-gradient(135deg,#4a38d6,#d1489a 70%,#ffb27a);color:#f2f3ff;box-shadow:0 22px 44px -26px rgba(40,20,120,.65)}
+.scr .in{position:absolute;inset:0;font-size:2.05cqw;line-height:1.35}
+.m-w{position:absolute;background:#161936;border-radius:.9em;box-shadow:0 1em 2em #0006;overflow:hidden}
+.m-t{background:#1f2347;padding:.45em .9em;font-weight:700}.m-bd{padding:.8em .9em;display:flex;flex-direction:column;gap:.5em}
+.m-r{display:flex;align-items:center;justify-content:space-between;gap:.6em;background:#1f2347;border:1px solid #303566;border-radius:.6em;padding:.45em .7em}
+.m-b{font-style:normal;background:#7c5cff;color:#fff;border-radius:.6em;padding:.3em .8em;font-weight:700}.m-b.g{background:#303566}
+.m-o{border:1.5px solid #303566;border-radius:.7em;padding:.6em .8em;background:#1f2347}.m-o.on{border-color:#7c5cff}
+.m-c{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:58%;background:#161936;border-radius:1em;padding:1.3em;display:flex;flex-direction:column;gap:.6em}
+.m-tb{position:absolute;left:0;right:0;bottom:0;height:3.2em;background:#161936d9;display:flex;align-items:center;gap:.6em;padding:0 .8em}
+.m-i{position:absolute;width:4.6em;text-align:center;font-size:.8em}.m-i i{display:block;font-style:normal;font-size:2em;background:#ffffff30;border-radius:.4em;margin-bottom:.1em}
+.m-m{font-size:.85em;color:#9a9ec4}.m-bub{padding:.4em .8em;border-radius:1em;max-width:80%;background:#1f2347}.m-bub.me{align-self:flex-end;background:#7c5cff}
+.fl{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:10px}.fl a{color:var(--mut)}
+@media (max-width:760px){.plats{grid-template-columns:1fr}.shots{grid-template-columns:1fr}header .wrap{flex-wrap:wrap;height:auto;padding-top:8px;padding-bottom:8px}nav{order:3;width:100%;overflow-x:auto;gap:18px;padding-bottom:4px}.two{grid-template-columns:1fr}.screen{height:420px}.win{width:220px}.shelf b{display:block}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar i{transition:none}.dock button{transition:none}}
+</style></head>
+<body>
+<header><div class="wrap"><a class="brand" href="#top" id="logo"><span class="logo">Fibbe OS</span><span class="by"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAABgCAYAAAB416ClAAAHF0lEQVR42s2bXWwcVxXH/+fOrJN453rtJLhNKa2QcBrWdVtooVFSVAsQKtBSoN1VxacQIpWqRsGemXVQobsWhTgOAZWUiISXCh5A3jd46RMOL5Yqldbemdm4xWlSmiogYWi8dmLHO/fwMLPrjWOVOGnmch5HO3t/c+7/fNx7ZwjXajk2UKYQAKxB/wFKmQ+B1U5m7gDzMpE4y6zeIjK9Oi2NXxy9653oRuK1/s68JogiCwxT2D7k3W0oPEYc/hOc+iOEehEQgkPcxBx2g9AFQ+xoq9O5i6Cz0X1YE4TWR8AEBkDElu19F0BWEI7O/azvFK7Trh6EmaJfE1uO9wwRLdYO3XkYADDGBgIwSmCUSgSUgCoIOQDBCQL6FYZJ4fqNCSCgWBTS8X9s2f7j0RQVBZgJyRgTmAnFcVO6/kHpVh+OIMZNJGdMyI0ZACALwYgc8h7RALEyoOX6z1pukNMDMcZGDLHHcr2nNHmCRQRReVDaleeSgKA1w7QE6pgLOtlUz9XOX3Kw7d7FKBGtnRXfDxNXXMmXBYZJscH7QPxbHL/vAqplupEQ7zklVqHyg2ZNScAun/cSGBg3sWA8QgYdQLEoUIJCAilLXOYNIs4sdPeDcbI2kp1FtUSgZKbkCo0owgPhhksvAUwYg0o2XBHVi/bvV7dZjv+jVr0kZdFgxbiupjhLUKcBAL2g5EHiQQXzhyDoTQBAAE4epFxudHEZrvO/VyIoOYvCN5uLByXTSJmL0GCRR6rlWA9cV0ql9IEg14ieGinVGU1NSYNYs5EelFJnlEG3R17SATIcZU+x2DYlGNlWuOSt0RK6vm053u6kk9rKQOWcApiU2vg7AcphD6diEZM2r1hO8Gi64D+tpz1c1atKp/ITaU/e3wqYfAEsFkVmf6VLOt6xtD3Z3VxMJW6xSLsGpvos138eRTabCy1dekk7wWel6x9sRpAWzzT0Yle/KB1vBAMTm3T0KqsWWsGnLNc/1NSMFgHHnbxl+1nL8X4uBye3AwAe1BHasQfidnJUFrxd+jzTFOw77ZYb/DBte080V4eJR1TLgJbjf0+6/sAVoMkmvXhV6HiPWQV/tGvolYy+qWqE96C3S7reC9J9taf1esIwkQc2Dvm3SSc4kra9fn0wjemwJ9PSDX7a4fpfX9FM0iJuSf3S9W1Z8AfXEnjiIpZO8A3L8Uex940N/wdlofJl6Qa/3uKelPpgGjuSzvRu6fpH5f7qFu0w7YPBxyzHe9Ha++oHNDZZEUzGrtwr7crxzL7XOtcSMCWmmTyF0g7uh+Bv1xbbBrC5Z/lG71S+p2dkIfi8dIMDre2FRgH7T0rX+6Y+8bbCuJVDHfv9jwAgFFlooDmhInEax3mZvwXoWmO3aEO6ntvuTn388rVvopkXCmBiM/Unwcbn9IEQMRiYP7BjWgAbrMHprULb9ORjJxBmhKjfpw8kW4pFql5n8A59IMMRSGjibRA26wOJU/vCjPgPQBs0gjR2qu68BLDSDxL3tPpB9vzV1AwSeaJj20YJFpf0gTQqzBw2M5RGkFLUlHGKu8E8a2oDqcYgoFtI4Kx2sRLzB1nRm/pAyhSiyIJBmXk1d1rojJjM4vRtAJbwi10X9YDkygIAVH2pT4DPaMwj8UEVGXcw1KQ+kDKFtw78fRMAWfvEXTMAU/Ig8fLhvPHuPUx8DnkKUTxhJA8SH2QqRZ9kbpuILvar5BNaOR/eZJ9LX6DZrbW3KkH0fhsl3AbEW1wX6V+7AZxCOR+iHOk0WZD4oFsR7Vw28Oe4iU74jYx4GyJjT3+4oxA80+qhZD0STwFT/QuK+C+tHko4pTNl9p3ulG5wAGNsrN41SsYjubIAiFVq/ksQagJ5ClHtvWyTKJnwHcspOJNpEPXWLrQ9G4dsmKxHcmyAiCWJrzDTBI5sX0K+fMW4xg3XRq6Erp2HOxRSj8/PLR7Dw9uAo08nHLLxPkiH4+9Nu8FnWmtNgsUtigrpBj2W44+uzhur7QbS9Ud5g9WTRPQbAJR83hhrTsnXZMH/zv/yxspN7+cxRqyL9iHvbul4I61g66qM1yWmeMC0PdktC8Ev5f6Xt0QPeRUParn+ULvj39woTNKduiN6KWGdBS3eP93knrwlOt8LetbzYCbAswI4lh6c+sMC0e9rwOvNP89DIAteY8+cUCwSqiVCFgwiBaAevRJUf4IJv5of7f1b/GnDVeWMqDTve60zbDOfAmOrMMxXCJg4f/CjZ67WIXKwup1F/avE1I6U8XxtJDu7HogIJDdmoJwPAaDd8W82DePTLNp2gOsMxmk2zRkTi2+/O5f6B45sX0Jx3MwsbZF1Tt2KMOwjqB6GIcBqfOFw34nmdKzzEwVaScUQjc9UIsHNdKNtuddgsxcq7GK1vAlCCGY2QIKZ+YIATsFYfrk2cs8bKwDXdvTxX3GjIqr0diqFAAAAAElFTkSuQmCC" alt="">by Solly</span></a>
+<nav><a href="#what">What it does</a><a href="#apps">Apps</a><a href="#screenshots">Screenshots</a><a href="#parents">For parents</a><a href="#about">About</a><a href="https://solly-grow-your-community.lovable.app/careers" target="_blank" rel="noopener noreferrer">Careers</a></nav>
+<button class="btn sm dl">Download</button></div></header>
+
+<main id="home" data-page="home">
+<div class="wrap" id="top">
+<div class="hero">
+<h1>A computer that lives in your browser.</h1>
+<p class="lead">Fibbe OS has windows, an app store, a browser, mail and 76 apps. It’s free, tiny, and it saves everything on your own computer.</p>
+<div class="ctas"><button class="btn dl">Download for macOS 15 and newer</button><a class="btn ghost" id="try" href="#" hidden>Try it in your browser</a><span class="btn ghost off" aria-disabled="true">GitHub coming soon</span></div>
+<p class="fine">It’s a 90 KB zip file hosted on Google Drive. Windows and Linux versions are coming soon.</p>
+<div class="screen" id="screen" aria-label="A small working Fibbe desktop">
+<div class="hint">Try it: open an app from the dock, then drag its window.</div>
+<div class="dock" role="toolbar" aria-label="Demo apps">
+<button data-app="browser" aria-pressed="false" aria-label="Browser">🌐</button><button data-app="mail" aria-pressed="false" aria-label="Mail">✉️</button><button data-app="shield" aria-pressed="false" aria-label="Fibbe Shield">🛡️</button><button data-app="parent" aria-pressed="false" aria-label="Parental Controls">👪</button></div>
+</div></div></div>
+
+<section id="what"><div class="wrap"><h2>What Fibbe does</h2>
+<div class="two">
+<div><b>A real desktop</b><p>Drag windows, snap them to the screen edges, resize them or go full screen. Move the icons wherever you want.</p></div>
+<div><b>An app store with 76 apps</b><p>Games, tools, notes, music and more. Install or remove any of them with one click.</p></div>
+<div><b>Fibbe Browser</b><p>Tabs, a small Fibbe web you can add your own pages to, and real websites that allow it.</p></div>
+<div><b>Mail and Messages</b><p>Get your own @fibbe.mail address and chat with contacts you saved. It all stays on your computer.</p></div>
+<div><b>Fibbe Shield</b><p>Checks links before you open them and scans Fibbe’s notes, mail and messages for scam wording.</p></div>
+<div><b>Child accounts</b><p>A parent PIN, blocked website categories, approved-sites-only mode, locked apps and a daily screen time limit.</p></div>
+<div><b>Your own Wi‑Fi</b><p>Make networks with a name and password, then connect and switch between them.</p></div>
+<div><b>An on-screen keyboard</b><p>On a computer, a keyboard appears and lights up each key as you type.</p></div>
+<div><b>Backups</b><p>Export your whole account to a file and bring it back whenever you need it.</p></div>
+<div><b>A 17-step setup</b><p>Pick your language, Wi‑Fi, account type, email, web protection, theme and starter apps the first time you open it.</p></div>
+</div></div></section>
+
+<section id="apps"><div class="wrap"><h2>76 apps, ready to install</h2>
+<div class="shelf">
+<p><b>Games</b>Snake, 2048, Tic-Tac-Toe, Memory Match, Typing Test, Rock Paper Scissors, Number Guess, Magic 8</p>
+<p><b>Everyday</b>Notes, Tasks, Journal, Flashcards, Text Editor, Contacts, Calendar, Habit Tracker</p>
+<p><b>Tools</b>Calculator, Unit Converter, Timer, Focus Timer, World Clock, Password Maker, Tip Calculator, Word Counter</p>
+<p><b>Creative and music</b>Sketchpad, Piano, Drum Pad, Calm Noise, Color Picker, Emoji Picker</p>
+<p><b>System</b>Settings, Fibbe Store, Terminal, Task Manager, Files, Fibbe Shield, Parental Controls</p>
+</div>
+<p class="fine">Some apps, like Photos or Maps, are previews for now.</p></div></section>
+
+<section id="get"><div class="wrap"><h2>Get Fibbe OS</h2>
+<dl class="facts"><dt>File</dt><dd>Fibbe-OS-for-Mac.zip</dd><dt>Size</dt><dd>90 KB</dd><dt>Works on</dt><dd>macOS 15 and newer</dd><dt>Price</dt><dd>Free</dd></dl>
+<button class="btn dl">Download for macOS 15 and newer</button>
+<div class="plats"><div><b>Windows</b>Coming soon</div><div><b>Linux</b>Coming soon</div><div><b>GitHub</b>Coming soon</div></div>
+<h2 style="margin-top:46px">Open it in three steps</h2>
+<ol class="steps"><li>Unzip the file you downloaded.</li><li>Open the folder named “Fibbe OS”.</li><li>Double-click “Fibbe OS.html”. It opens in your browser and the setup starts.</li></ol></div></section>
+
+<section id="faq"><div class="wrap"><h2>Questions</h2>
+<details><summary>Why does the download go to Google Drive?</summary><p>The file is hosted there. After you click Download, you land on Google Drive’s download for the zip.</p></details>
+<details><summary>Is it a real operating system?</summary><p>It’s a full desktop experience that runs inside your browser. It doesn’t replace macOS, and it isn’t a native Mac app, so macOS shows no warnings.</p></details>
+<details><summary>Where is my data saved?</summary><p>In the browser you open Fibbe with, on your own computer. Open it in the same browser each time, and use Settings, then Export backup, to keep a copy.</p></details>
+<details><summary>Does it need the internet?</summary><p>Fibbe runs from the file you downloaded. Real websites in Fibbe Browser need an internet connection, and some sites don’t allow being shown inside other pages.</p></details>
+<details><summary>Can children’s accounts be bypassed?</summary><p>Fibbe saves its settings in the browser, so someone who clears the browser’s site data can get around them. Treat Parental Controls as a helper, not a lock.</p></details>
+<details><summary>Does Fibbe Shield protect my whole computer?</summary><p>No. It checks links opened in Fibbe Browser and the notes, mail and messages saved inside Fibbe.</p></details>
+<details><summary>What about Windows or other computers?</summary><p>Fibbe is made for macOS 15 and newer. Windows and Linux versions are coming soon. Until then, any computer with a current browser can open the file, but those setups aren’t officially supported.</p></details>
+</div></section>
+</main>
+
+<main class="pg" data-page="screenshots" hidden><div class="wrap">
+<h1>See Fibbe OS</h1>
+<p class="lead">These are mockups drawn to show how Fibbe’s screens are laid out. The real thing looks and works the same way.</p>
+<div class="shots">
+<figure><div class="scr"><div class="in"><div class="m-c"><span class="m-m">Step 3 of 17</span><b style="font-size:1.5em">Who is this account for?</b><div class="m-o">🧑 Adult account</div><div class="m-o on">🧒 Child account<br><span class="m-m">Blocks dangerous websites. A parent manages it with a PIN.</span></div><div style="display:flex;justify-content:space-between"><i class="m-b g">Back</i><i class="m-b">Next</i></div></div></div></div><figcaption><b>Setup</b><span>A 17-step setup, including the choice of an adult or child account.</span></figcaption></figure>
+<figure><div class="scr"><div class="in">
+<div class="m-i" style="left:2%;top:5%"><i>🌐</i>Browser</div><div class="m-i" style="left:2%;top:30%"><i>✉️</i>Mail</div><div class="m-i" style="left:2%;top:55%"><i>🛡️</i>Shield</div>
+<div class="m-w" style="left:20%;top:8%;width:36%"><div class="m-t">📝 Notes</div><div class="m-bd"><div class="m-r">Buy milk</div><div class="m-r">Call Sam</div></div></div>
+<div class="m-w" style="left:52%;top:28%;width:30%"><div class="m-t">🧮 Calculator</div><div class="m-bd"><b style="font-size:1.8em;text-align:right">42</b></div></div>
+<div class="m-tb"><i class="m-b" style="padding:.2em .7em">F</i><span class="m-r" style="padding:.15em .6em">📝 Notes</span><span class="m-r" style="padding:.15em .6em">🧮 Calculator</span><span style="flex:1"></span><span class="m-m">📶 Home-5G</span><span class="m-m">9:41 AM</span></div>
+</div></div><figcaption><b>The desktop</b><span>Windows, icons you can move, a taskbar and a Start menu.</span></figcaption></figure>
+<figure><div class="scr"><div class="in"><div class="m-w" style="left:12%;top:6%;width:76%"><div class="m-t">🛍️ Fibbe Store</div><div class="m-bd"><div class="m-r">Search 76 apps</div>
+<div class="m-r"><span>🐍 Snake<br><span class="m-m">Eat and grow.</span></span><i class="m-b">Get</i></div><div class="m-r"><span>🔢 2048<br><span class="m-m">Merge the tiles.</span></span><i class="m-b g">Remove</i></div><div class="m-r"><span>🥁 Drum Pad<br><span class="m-m">Press A to K.</span></span><i class="m-b">Get</i></div></div></div></div></div><figcaption><b>App Store</b><span>Install or remove any of the 76 apps with one click.</span></figcaption></figure>
+<figure><div class="scr"><div class="in"><div class="m-w" style="left:8%;top:6%;width:84%"><div class="m-t">🌐 Browser</div><div class="m-bd"><div style="display:flex;gap:.5em"><i class="m-b g">🏠 Home</i><i class="m-b g">📚 Wikipedia</i></div><div class="m-r">fibbe://home</div><b>Real websites</b>
+<div class="m-r"><span>📚 Wikipedia</span><span class="m-m">en.wikipedia.org</span></div><div class="m-r"><span>🗺️ OpenStreetMap</span><span class="m-m">openstreetmap.org</span></div><div class="m-r"><span>🖍️ xkcd</span><span class="m-m">xkcd.com</span></div></div></div></div></div><figcaption><b>Fibbe Browser</b><span>Tabs, pages you can make yourself and real websites.</span></figcaption></figure>
+<figure><div class="scr"><div class="in" id="m-parent"><div class="m-w" style="left:14%;top:5%;width:72%"><div class="m-t">👪 Parental Controls</div><div class="m-bd"><div style="display:flex;gap:.5em"><i class="m-b g">Off</i><i class="m-b">Standard</i><i class="m-b g">Strict</i></div><div class="m-r"><span>☑ Adult content</span><span>☑ Gambling</span><span>☐ Social media</span></div><div class="m-r"><span>Screen time</span><b>120 minutes a day</b></div><div class="m-r"><span>🚫 casino-royale.com</span><span class="m-m">Gambling is blocked</span></div></div></div></div></div><figcaption><b>Parental Controls</b><span>Web protection, blocked categories, screen time and a log of blocked attempts.</span></figcaption></figure>
+<figure><div class="scr"><div class="in"><div class="m-w" style="left:10%;top:7%;width:80%"><div class="m-t">💬 Messages</div><div style="display:grid;grid-template-columns:30% 1fr"><div class="m-bd" style="border-right:1px solid #303566"><div class="m-r">💬 Fibbe Bot</div><div class="m-r">👤 Sam</div><div class="m-r">👤 Alex</div></div><div class="m-bd"><div class="m-bub">Hey there! 👋</div><div class="m-bub me">Hi! What’s the time?</div><div class="m-bub">It’s 9:41 AM.</div></div></div></div></div></div><figcaption><b>Messages</b><span>Chats that link to your contacts.</span></figcaption></figure>
+</div>
+<p style="margin-top:36px"><button class="btn dl">Download for macOS 15 and newer</button></p>
+</div></main>
+
+<main class="pg" data-page="parents" hidden><div class="wrap">
+<h1>For parents</h1>
+<p class="lead">A Fibbe child account is managed with a parent PIN. You choose what it can open, and Fibbe keeps a log of what it blocked.</p>
+<div class="two" style="margin-top:30px">
+<div><b>Blocks dangerous sites</b><p>Links that aren’t encrypted, use raw IP addresses or look-alike names are stopped.</p></div>
+<div><b>Blocks the categories you pick</b><p>Adult content, gambling, violence, social media, games and shopping.</p></div>
+<div><b>Strict mode</b><p>Only sites you approve can be opened.</p></div>
+<div><b>Safe searching</b><p>Adult searches are blocked.</p></div>
+<div><b>Screen time</b><p>Set a daily limit. When it runs out, only the parent PIN adds more time.</p></div>
+<div><b>Locked apps</b><p>Terminal, Task Manager and Settings need the PIN, and so can installing new apps.</p></div>
+</div>
+<h2 style="margin-top:48px">Set it up</h2>
+<ol class="steps"><li>In the setup, choose “Child account” in step 3.</li><li>In step 7, enter your name and a PIN you’ll remember.</li><li>In steps 8 to 13, pick the protection level, categories, sites, screen time and locked apps.</li><li>Change anything later in the Parental Controls app. It asks for your PIN.</li></ol>
+<div id="pc-slot" style="max-width:560px;margin:34px 0"></div>
+<h2>Good to know</h2>
+<p class="note">Fibbe saves its settings in the browser, so someone who clears the browser’s site data can get around them. The keyword lists are short and will miss some sites. Treat Fibbe as a helper, and keep talking with your child about the web.</p>
+<p style="margin-top:30px"><button class="btn dl">Download for macOS 15 and newer</button></p>
+</div></main>
+
+<main class="pg" data-page="about" hidden><div class="wrap">
+<h1>About Fibbe OS</h1>
+<p class="lead">Fibbe OS is a desktop that runs inside your browser, with its own app store, browser, mail and messages. It’s made by Solly.</p>
+<div class="by" style="font-size:16px;margin:6px 0 34px"><img src="data:image/png;base64,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" alt="" style="height:20px;width:auto">by Solly</div>
+<h2>Where it runs</h2>
+<div class="plats" style="max-width:none"><div><b>macOS 15 and newer</b>Available now</div><div><b>Windows</b>Coming soon</div><div><b>Linux</b>Coming soon</div><div><b>GitHub</b>Coming soon</div></div>
+<h2 style="margin-top:48px">Work with Solly</h2>
+<p class="lead" style="margin-top:0">Want to help build projects like Fibbe OS? See what’s open on the Solly careers page.</p>
+<p style="margin-top:14px"><a class="btn" href="https://solly-grow-your-community.lovable.app/careers" target="_blank" rel="noopener noreferrer">See careers at Solly</a></p>
+</div></main>
+
+<main id="thanks" class="thanks" hidden><div class="wrap">
+<h1>Thanks for downloading Fibbe OS!</h1>
+<p class="lead" id="tmsg" style="font-size:20px;color:var(--mut);margin-top:16px"></p>
+<div class="bar"><i id="bar"></i></div>
+<p><a href="#" id="manual" target="_blank" rel="noopener noreferrer">Download didn’t start? Click here.</a></p>
+<h2 style="margin-top:40px">What to do next</h2>
+<ol class="steps"><li>Unzip the file from your Downloads folder.</li><li>Open the folder named “Fibbe OS”.</li><li>Double-click “Fibbe OS.html” and follow the setup.</li></ol>
+<p style="margin-top:28px"><button class="btn ghost" id="back">Back to the website</button></p>
+</div></main>
+
+<footer><div class="wrap"><div class="by"><img src="data:image/png;base64,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" alt="">by Solly</div>Fibbe OS is an independent project. It’s free to use and share.<p class="fl"><a href="#screenshots">Screenshots</a><a href="#parents">For parents</a><a href="#about">About</a><a href="#faq">Questions</a><a href="https://solly-grow-your-community.lovable.app/careers" target="_blank" rel="noopener noreferrer">Careers</a></p></div></footer>
+
+<script>
+/* ---- Owner settings: paste your Google Drive share link between the quotes ---- */
+const DRIVE_LINK='https://drive.google.com/file/d/1beoh8EqHCacLaoh5fXg3wXxdc9xDg_EA/view?usp=drivesdk';
+const TRY_LINK=''; /* optional: a link to the web version of Fibbe OS */
+/* ------------------------------------------------------------------------------ */
+const $=s=>document.querySelector(s);
+const id=DRIVE_LINK.match(/\/d\/([\w-]+)/)||DRIVE_LINK.match(/[?&]id=([\w-]+)/);
+const DIRECT=id?'https://drive.google.com/uc?export=download&id='+id[1]:'';
+if(TRY_LINK){const t=$('#try');t.href=TRY_LINK;t.hidden=false}
+let iv=null;
+function showThanks(){
+ clearInterval(iv);document.querySelectorAll('[data-page]').forEach(m=>m.hidden=true);$('#thanks').hidden=false;scrollTo(0,0);
+ const bar=$('#bar'),man=$('#manual'),msg=$('#tmsg');
+ bar.style.transition='none';bar.style.width='0';
+ if(!DIRECT){msg.innerHTML='Site owner: paste your Google Drive link into the <code>DRIVE_LINK</code> line near the top of this file. After that, the download starts here automatically.';man.hidden=true;return}
+ man.hidden=false;man.href=DIRECT;let n=3;
+ msg.innerHTML='Taking you to Google Drive in <b id="cd">3</b>…';
+ void bar.offsetWidth;bar.style.transition='';bar.style.width='100%';
+ iv=setInterval(()=>{n--;if(n>0){$('#cd').textContent=n;return}clearInterval(iv);msg.textContent='Opening Google Drive…';try{location.href=DIRECT}catch(e){}},1000);
+}
+function showHome(){nav('home')}
+const PAGES=['screenshots','parents','about'];
+function nav(t){clearInterval(iv);$('#thanks').hidden=true;const p=PAGES.includes(t)?t:'home';document.querySelectorAll('[data-page]').forEach(m=>m.hidden=m.dataset.page!==p);const e=p==='home'&&t&&t!=='home'&&t!=='top'&&document.getElementById(t);if(e)e.scrollIntoView();else scrollTo(0,0)}
+document.querySelectorAll('.dl').forEach(b=>b.onclick=showThanks);
+$('#back').onclick=showHome;
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;e.preventDefault();nav(a.getAttribute('href').slice(1))});
+
+
+/* ---- the live demo desktop ---- */
+const scr=$('#screen'),opened={},APPS={
+ browser:['Browser','<div class="ab">fibbe://home</div><b>Real websites</b><ul><li>Wikipedia</li><li>OpenStreetMap</li><li>xkcd</li></ul>',[24,40]],
+ mail:['Mail','<b>hello@fibbe.mail</b><br>Welcome to Fibbe Mail<br><br><b>wifi@fibbe.mail</b><br>Your custom Wi‑Fi is ready',[150,70]],
+ shield:['Fibbe Shield','<span id="shs">Last scan: never</span><br><button class="m" data-scan>Scan now</button>',[300,34]],
+ parent:['Parental Controls','<label class="sw"><input type="checkbox" checked data-pc> Block dangerous sites</label><p id="pcs" style="margin-top:8px">Blocked: casino-royale.com</p>',[400,86]]};
+let zi=5;
+function mk(k){const [t,h,[x,y]]=APPS[k],w=document.createElement('div');w.className='win';w.style.cssText=`left:${x}px;top:${y}px;z-index:${++zi}`;
+ w.innerHTML=`<div class="tt"><span>${t}</span></div><div class="bd">${h}</div>`;scr.appendChild(w);
+ const bar=w.querySelector('.tt');
+ bar.onpointerdown=e=>{w.style.zIndex=++zi;const r=scr.getBoundingClientRect(),dx=e.clientX-w.offsetLeft-r.left,dy=e.clientY-w.offsetTop-r.top;bar.setPointerCapture(e.pointerId);
+  bar.onpointermove=m=>{w.style.left=Math.max(0,Math.min(r.width-w.offsetWidth,m.clientX-r.left-dx))+'px';w.style.top=Math.max(0,Math.min(r.height-60,m.clientY-r.top-dy))+'px'};bar.onpointerup=()=>{bar.onpointermove=null}};
+ w.addEventListener('pointerdown',()=>w.style.zIndex=++zi);
+ const sc=w.querySelector('[data-scan]');if(sc)sc.onclick=()=>{const s=w.querySelector('#shs');s.textContent='Scanning…';setTimeout(()=>s.textContent='No threats found ✓',900)};
+ const pc=w.querySelector('[data-pc]');if(pc)pc.onchange=()=>{w.querySelector('#pcs').textContent=pc.checked?'Blocked: casino-royale.com':'Protection is off'};
+ return w}
+document.querySelectorAll('.dock button').forEach(b=>b.onclick=()=>{const k=b.dataset.app;
+ if(!opened[k])opened[k]=mk(k);else opened[k].hidden=!opened[k].hidden;
+ b.setAttribute('aria-pressed',String(!opened[k].hidden));if(!opened[k].hidden)opened[k].style.zIndex=++zi});
+opened.browser=mk('browser');$('[data-app="browser"]').setAttribute('aria-pressed','true');
+{const c=$('#m-parent').cloneNode(true);c.removeAttribute('id');const w=document.createElement('div');w.className='scr';w.appendChild(c);$('#pc-slot').appendChild(w)}
+nav(location.hash.slice(1)||'home');
+</script></body></html>
