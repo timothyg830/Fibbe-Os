@@ -16,3 +16,4 @@ TIPS
   so macOS won't show any "unidentified developer" warning.
 
 Enjoy Fibbe!
+<a href="https://gitt-platform.netlify.app/projects/your-project"><img src="https://gitt-platform.netlify.app/badge.svg" alt="Launching on Gitt" height="32" /></a>
