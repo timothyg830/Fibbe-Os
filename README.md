@@ -1,2 +1,2 @@
 # Fibbe-Os
-Vibecoded os
+the os for education and much more
